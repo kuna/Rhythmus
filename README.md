@@ -2,6 +2,7 @@ Rhythmus
 
 stable release 전용입니다.
 unstable release는 backup 브랜치를 참조해 주세요.
+
 ========
 
 An Ultimate BMS Emulator Project (Rhythm Game)
