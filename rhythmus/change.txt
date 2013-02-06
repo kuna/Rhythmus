@@ -113,3 +113,11 @@ Rhythmus Project Change Log
   -> 관문: 수많은 파일들과의 연동
  다음 목표: 노트드로잉 및 보다 많은 명령어 지원, sprite 스케일링 지원
  차후 목표: 키 인풋 및 사운드 지원! 그렇게 프리뷰가 가능해지면 베타버전을 웹에 올린다.
+
+* 2/4
+ 루프부분은 timer이 아닌 skinelement 부분에 넣는 걸로 흐름을 수정.
+
+* 2/5
+ SRC~DST 부분의 구현 완료. drawing 부분 구현만 하면 얼추 완료된다.
+ sprite를 폴리곤으로 변경할 필요가 생김.
+ - 2/6 AM 01:02 - Timer/Option/SRC~DST Element 기본적인 구현 완료, 디버깅 시작

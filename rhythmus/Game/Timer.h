@@ -4,26 +4,27 @@
 
 
 */
-
-#define MAX_TIMER			100
+#pragma once
+#define MAX_TIMER			1000
 
 class Timer {
 protected:
 	DWORD gameStartTime;
 	DWORD relativeTime[MAX_TIMER];	// MAX 100
-	DWORD savedGameStartTime;
-	DWORD savedRelativeTime[MAX_TIMER];
-	BOOL isGameStartTimer;                                                                                                                
-	int loopCount[MAX_TIMER];
-	int loopTime[MAX_TIMER];
+	BOOL isTimerEnabled[MAX_TIMER];
+	//DWORD savedGameStartTime;
+	//DWORD savedRelativeTime[MAX_TIMER]; // for Pause
 public:
+	Timer();
 	DWORD getGameTime();
-	DWORD getTime(int index);
-	void setGameTime();	// Initalize
+	int getTime(int index);
+	void resetGameTime();	// Initalize
 	void stopGameTimer();
-	void setTime(int index, int relativetime, BOOL loopcount, int looptime);
+	void setTime(int index, int relativetime);
+	void resetTimer(int index);
 	void stopTimer(int index);
-	void startTimer(int index);	// relativetime 설정시엔 자동으로 타이머 실행됨
+	BOOL isTimer(int index);
+	//void startTimer(int index);	// relativetime 설정시엔 자동으로 타이머 실행됨
 	void resetMainTimer();
 	DWORD getMainTime();
 };

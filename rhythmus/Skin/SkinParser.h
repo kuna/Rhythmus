@@ -10,6 +10,7 @@ protected:
 	BOOL isUnicode;
 	TCHAR *fileData;
 
+	int wtoi(TCHAR *t);
 	int csv_argcnt(TCHAR *t);
 	int csv_argindex(TCHAR *t);
 
@@ -17,8 +18,8 @@ protected:
 	void ProcessCSVLine(TCHAR *text);
 
 	vector <int> op;
-	vector <int> nop;
 	BOOL isConditional;
+	BOOL SRCMODE;
 public:
 	TCHAR	data_img_path[256][256];
 	int		data_img_cnt;

@@ -1,14 +1,16 @@
+#pragma once
+
 #include <vector>
 using namespace std;
 
 class Option {
-protected:
+private:
 	int o[1000];
 public:
 	Option();
 	BOOL LoadOption();
 	BOOL SaveOption();
-	BOOL CheckOption(vector <int> op, vector <int> nop);
+	BOOL CheckOption(vector <int> op);
 };
 
 // CONST DEFINITION

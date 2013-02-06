@@ -55,20 +55,21 @@ BOOL SkinParser::ReadCSVFile(TCHAR *path) {
 		//free(noteData);
 
 		locale = BMS_LOCALE_JP;
-		if (!BMSUtil::convert(_noteData, fSize, "SHIFT_JIS", &fileData))
-			return BMS_INVALIDFILE;
-
-		// header len ... or first parse necessary
-		for (int i=0;i<1000;i++) {
-			if (fileData[i] >= 44032 && fileData[i] <= 55203) {
+		if (!BMSUtil::convert(_noteData, fSize, "SHIFT_JIS", &fileData)) {
+			if (!BMSUtil::convert(_noteData, fSize, "CP949", &fileData)) {
+				return BMS_INVALIDFILE;
+			} else {
 				locale = BMS_LOCALE_KR;
-				break;
 			}
 		}
 
-		if (locale == BMS_LOCALE_KR) {
-			free(fileData);
-			BMSUtil::convert(_noteData, fSize, "CP949", &fileData);
+		// header len ... or first parse necessary
+		for (int i=0;i<1000 && locale == BMS_LOCALE_UNKNOWN;i++) {
+			if (fileData[i] >= 44032 && fileData[i] <= 55203) {
+				BMSUtil::convert(_noteData, fSize, "CP949", &fileData);
+				locale = BMS_LOCALE_KR;
+				break;
+			}
 		}
 
 		free(_noteData);
@@ -121,7 +122,6 @@ void SkinParser::ProcessCSVLine(TCHAR *text) {
 
 	TCHAR args[50][256];
 	int i, ai=0;
-	BOOL SRCMODE = FALSE;
 
 	while (wcslen(text) != (i=csv_argindex(text))) {
 		if (ai >= 20) break;		// EXCEPTION
@@ -137,11 +137,7 @@ void SkinParser::ProcessCSVLine(TCHAR *text) {
 		}
 
 		for (int i=1; i<ai; i++) {
-			if (args[i][0] == '!') {
-				nop.push_back( _wtoi(args[i]+1) );
-			} else {
-				op.push_back( _wtoi(args[i]) );
-			}
+			op.push_back( wtoi(args[i]) );
 		}
 		isConditional = TRUE;
 	} else if (CMP(args[0], L"#ELSEIF")) {
@@ -149,19 +145,17 @@ void SkinParser::ProcessCSVLine(TCHAR *text) {
 			// ERROR
 		}
 		
+		// convert option
+		for (int i=0; i<op.size(); i++)
+			op[i] = op[i] * -1;
 		for (int i=1; i<ai; i++) {
-			if (args[i][0] == L'!') {
-				nop.push_back( _wtoi(args[i]+1) );
-			} else {
-				op.push_back( _wtoi(args[i]) );
-			}
+			op.push_back( wtoi(args[i]) );
 		}
 	} else if (CMP(args[0], L"#ENDIF")) {
 		if (!isConditional) {
 			// ERROR
 		}
 
-		nop.clear();
 		op.clear();
 		isConditional = FALSE;
 	} else if (CMP(args[0], L"#IMAGE")) {
@@ -177,18 +171,19 @@ void SkinParser::ProcessCSVLine(TCHAR *text) {
 	} else if (CMP(args[0], L"#SRC_IMAGE")) {
 		// (NULL)	gr	x	y	w	h	div_x	div_y	cycle	timer	op1	op2	op3
 		vector <int> argi;
-		argi.push_back(_wtoi( args[1] ));	// gr
-		argi.push_back(_wtoi( args[2] ));	// x
-		argi.push_back(_wtoi( args[3] ));	// y
-		argi.push_back(_wtoi( args[4] ));	// w
-		argi.push_back(_wtoi( args[5] ));	// h
-		argi.push_back(_wtoi( args[6] ));	// divx
-		argi.push_back(_wtoi( args[7] ));	// divy
-		argi.push_back(_wtoi( args[8] ));	// cycle
-		argi.push_back(_wtoi( args[9] ));	// timer
-		argi.push_back(_wtoi( args[10] ));	// op1	(unused or for other use)
-		argi.push_back(_wtoi( args[11] ));	// op2
-		argi.push_back(_wtoi( args[12] ));	// op3
+		argi.push_back(wtoi( args[1] ));	// (NULL)
+		argi.push_back(wtoi( args[2] ));	// gr
+		argi.push_back(wtoi( args[3] ));	// x
+		argi.push_back(wtoi( args[4] ));	// y
+		argi.push_back(wtoi( args[5] ));	// w
+		argi.push_back(wtoi( args[6] ));	// h
+		argi.push_back(wtoi( args[7] ));	// divx
+		argi.push_back(wtoi( args[8] ));	// divy
+		argi.push_back(wtoi( args[9] ));	// cycle
+		argi.push_back(wtoi( args[10] ));	// timer
+		argi.push_back(wtoi( args[11] ));	// op1	(unused or for other use)
+		argi.push_back(wtoi( args[12] ));	// op2
+		argi.push_back(wtoi( args[13] ));	// op3
 		if (SRCMODE) {
 			// EXCEPTION
 		} else {
@@ -197,7 +192,6 @@ void SkinParser::ProcessCSVLine(TCHAR *text) {
 
 			// IF구문 Condition은 미리 정해놓는 게 더 편하다
 			m_se[skinElementCnt-1].set_op(op);
-			m_se[skinElementCnt-1].set_nop(nop);
 
 			SRCMODE = TRUE;
 		}
@@ -205,35 +199,32 @@ void SkinParser::ProcessCSVLine(TCHAR *text) {
 		// (NULL)	time	x	y	w	h	acc	a	r	g	b	blend	filter	angle	center	loop	timer	op1	op2	op3
 		
 		vector <int> argi;
-		argi.push_back(_wtoi( args[1] ));	// time
-		argi.push_back(_wtoi( args[2] ));	// x
-		argi.push_back(_wtoi( args[3] ));	// y
-		argi.push_back(_wtoi( args[4] ));	// w
-		argi.push_back(_wtoi( args[5] ));	// h
-		argi.push_back(_wtoi( args[6] ));	// acc
-		argi.push_back(_wtoi( args[7] ));	// a
-		argi.push_back(_wtoi( args[8] ));	// r
-		argi.push_back(_wtoi( args[9] ));	// g
-		argi.push_back(_wtoi( args[10] ));	// b
-		argi.push_back(_wtoi( args[11] ));	// blend
-		argi.push_back(_wtoi( args[12] ));	// filter
-		argi.push_back(_wtoi( args[13] ));	// angle
-		argi.push_back(_wtoi( args[14] ));	// center
-		argi.push_back(_wtoi( args[15] ));	// loop
-		argi.push_back(_wtoi( args[16] ));	// timer
-		//argi.push_back(_wtoi( args[17] ));	// op1
-		//argi.push_back(_wtoi( args[18] ));	// op2
-		//argi.push_back(_wtoi( args[19] ));	// op3
+		argi.push_back(wtoi( args[1] ));	// (NULL)
+		argi.push_back(wtoi( args[2] ));	// time
+		argi.push_back(wtoi( args[3] ));	// x
+		argi.push_back(wtoi( args[4] ));	// y
+		argi.push_back(wtoi( args[5] ));	// w
+		argi.push_back(wtoi( args[6] ));	// h
+		argi.push_back(wtoi( args[7] ));	// acc
+		argi.push_back(wtoi( args[8] ));	// a
+		argi.push_back(wtoi( args[9] ));	// r
+		argi.push_back(wtoi( args[10] ));	// g
+		argi.push_back(wtoi( args[11] ));	// b
+		argi.push_back(wtoi( args[12] ));	// blend
+		argi.push_back(wtoi( args[13] ));	// filter
+		argi.push_back(wtoi( args[14] ));	// angle
+		argi.push_back(wtoi( args[15] ));	// center
+		argi.push_back(wtoi( args[16] ));	// loop
+		argi.push_back(wtoi( args[17] ));	// timer
+		//argi.push_back(wtoi( args[17] ));	// op1
+		//argi.push_back(wtoi( args[18] ));	// op2
+		//argi.push_back(wtoi( args[19] ));	// op3
 		
 		m_se[skinElementCnt-1].push_dst( argi );
 		
 		// set op (TODO: dst 개수가 1개일때로 condition 만들 것)
-		for (int i=17; i<=19; i++) {
-			if (args[10][0] == L'!') {
-				m_se[skinElementCnt-1].add_nop( _wtoi(args[i]+1) );
-			} else {
-				m_se[skinElementCnt-1].add_op( _wtoi(args[i]) );
-			}
+		for (int i=18; i<=20; i++) {
+			m_se[skinElementCnt-1].add_op( wtoi(args[i]) );
 		}
 
 		SRCMODE = FALSE;
@@ -254,4 +245,12 @@ int SkinParser::csv_argindex(TCHAR *t) {
 		if (t[i] == L',') return i;
 	}
 	return i;
+}
+
+int SkinParser::wtoi(TCHAR *t) {
+	if (t[0] == L'-') {
+		return _wtoi(t+1)*-1;
+	} else {
+		return _wtoi(t);
+	}
 }

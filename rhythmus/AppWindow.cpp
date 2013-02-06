@@ -9,6 +9,8 @@
 #include "Skin\SkinManager.h"
 #include "Skin\SkinParser.h"
 #include "Skin\SkinElement.h"
+#include "Game\Timer.h"
+#include "Game\Option.h"
 
 LPD3DXSPRITE g_pSprite9 = NULL;
 LPDIRECT3DTEXTURE9 texture = NULL;
@@ -21,6 +23,8 @@ DXCore dx;
 SkinParser sp;
 SkinManager sm;
 SkinElement se[1024];
+Timer m_Timer;
+Option m_Option;
 
 LRESULT CALLBACK WndProc(HWND hWnd,UINT iMessage,WPARAM wParam,LPARAM lParam);
 HWND hWnd;
@@ -29,6 +33,7 @@ void render_frame();
 
 // temp
 HWND hButton;
+BOOL Keyboard[10];
 
 int APIENTRY WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance
 		  ,LPSTR lpszCmdParam,int nCmdShow)
@@ -65,6 +70,11 @@ int APIENTRY WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance
 		MessageBox(hWnd, L"FAILED TO INITALIZE DIRECTX", L"ERROR", 0);
 		PostQuitMessage(-1);
 	}
+	m_Timer.resetGameTime();
+	m_Timer.resetMainTimer();
+
+	m_Timer.setTime(TIMER_READY, 0);
+	m_Timer.setTime(TIMER_PLAYSTART, 1000);
 
 	// load texture
 	dtexture.LoadTexture(L"basic.tga", dx.GetD3D9Device());
@@ -72,8 +82,11 @@ int APIENTRY WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance
 
 	sp.Initialize(se);
 	sp.ReadCSVFile(L"REMI-S\\Play\\7Key_Left.csv");
-	sm.Initalize(&dx, &sp);
-	sm.InitalizeTick(GetTickCount());
+	//sp.ReadCSVFile(L"REMI-S\\Play\\keyprs_test.csv");
+	sm.Initalize(&dx, &sp, &m_Timer, &m_Option);
+
+	AllocConsole();
+    freopen( "CONOUT$",  "wt", stdout);
 
 	/* GAME LOOP */
 	MSG msg;
@@ -86,7 +99,6 @@ int APIENTRY WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance
 		if (msg.message == WM_QUIT) break;
 
 		// render part
-		sm.SetTick(GetTickCount());
 		render_frame();
 	}
 
@@ -99,6 +111,7 @@ int APIENTRY WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance
 double t = 0;
 double b = 0;
 bool init = false;
+char keyArr[] = {VK_SHIFT, 'A', 'S', 'D', VK_SPACE, 'J', 'K', 'L'}; // TODO: temp
 LRESULT CALLBACK WndProc(HWND hWnd,UINT iMessage,WPARAM wParam,LPARAM lParam)
 {
 	switch(iMessage) {
@@ -121,6 +134,26 @@ LRESULT CALLBACK WndProc(HWND hWnd,UINT iMessage,WPARAM wParam,LPARAM lParam)
 				MessageBox(hWnd, L"Error", 0, 0);
 			}
 		}
+		break;
+	case WM_KEYDOWN:
+		for (int i=0; i<8; i++) {
+			if (wParam == keyArr[i]) {
+				if (!m_Timer.isTimer(TIMER_KEYSETTING+i)) {
+					m_Timer.stopTimer(TIMER_KEYOFF+i);
+					m_Timer.resetTimer(TIMER_KEYSETTING+i);
+				}
+			}
+		}
+
+		break;
+	case WM_KEYUP:		
+		for (int i=0; i<8; i++) {
+			if (wParam == keyArr[i]) {
+				m_Timer.resetTimer(TIMER_KEYOFF+i);
+				m_Timer.stopTimer(TIMER_KEYSETTING+i);
+			}
+		}
+
 		break;
 	case WM_PAINT:
 		/*
@@ -220,6 +253,10 @@ void render_frame() {
 	//	&m_vPos, D3DXCOLOR(1,1,1,1));
 
 	g_pSprite9->End();
+	
+	int t1 = m_Timer.getTime( TIMER_KEYSETTING );
+	int t2 = m_Timer.getTime( TIMER_KEYOFF );
+	printf("KETSET %d / KEYOFF %d, dsttime %d \n", t1, t2, 0);
 
 	dx.GetD3D9Device()->EndScene();
 	dx.GetD3D9Device()->Present(0, 0, 0, 0);

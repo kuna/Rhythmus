@@ -18,13 +18,14 @@ public:
 
 	DXCore *m_DXCore;
 	SkinElement *m_SkinElement;
+	SkinElement *m_SkinLine;
+
 	Option *m_Option;
 	Timer *m_Timer;
 	int SkinElementCnt;
 public:
-	void Initalize(DXCore *dx, SkinParser *sp);
+	void Initalize(DXCore *dx, SkinParser *sp, Timer *m, Option *option);
 	BOOL ReadLR2Skin(TCHAR *path);	// csv format
-	void InitalizeTick(long tick);
-	void SetTick(long tick);
 	BOOL Draw(LPD3DXSPRITE m_Sprite);
+	void DrawLine(LPD3DXSPRITE m_Sprite, int x, int y);
 };

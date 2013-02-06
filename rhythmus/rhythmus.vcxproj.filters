@@ -96,6 +96,9 @@
     <ClInclude Include="Game\Timer.h">
       <Filter>헤더 파일\Game</Filter>
     </ClInclude>
+    <ClInclude Include="Game\Log.h">
+      <Filter>헤더 파일\Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BMS\BMSParser.cpp">
@@ -138,6 +141,9 @@
       <Filter>소스 파일\Game</Filter>
     </ClCompile>
     <ClCompile Include="Game\Timer.cpp">
+      <Filter>소스 파일\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Log.cpp">
       <Filter>소스 파일\Game</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,9 +1,15 @@
 #include "..\common.h"
 #include "Timer.h"
 
-void Timer::setGameTime() {
-	isGameStartTimer = TRUE;
+Timer::Timer() {
+}
+
+void Timer::resetGameTime() {
 	gameStartTime = GetTickCount();
+}
+
+void Timer::stopGameTimer() {
+	gameStartTime = 0;
 }
 
 DWORD Timer::getGameTime() {
@@ -11,24 +17,37 @@ DWORD Timer::getGameTime() {
 }
 
 void Timer::resetMainTimer() {
-	savedRelativeTime[TIMER_MAIN] = GetTickCount();
+	isTimerEnabled[TIMER_MAIN] = TRUE;
+	relativeTime[TIMER_MAIN] = GetTickCount();
 }
 
 DWORD Timer::getMainTime() {
-	return GetTickCount()-savedRelativeTime[TIMER_MAIN];
+	return getTime( TIMER_MAIN );
 }
 
-void Timer::setTime(int index, int relativetime, BOOL loopcount, int looptime) {
-	savedRelativeTime[index] = getMainTime() + relativetime;
-	this->loopCount[index] = loopcount;
-	loopTime[index] = looptime;
+void Timer::setTime(int index, int relativetime) {
+	isTimerEnabled[index] = TRUE;
+	relativeTime[index] = relativeTime[TIMER_MAIN] + relativetime;
 }
 
-DWORD Timer::getTime(int index) {
-	DWORD gt = gameStartTime;
-	if (!isGameStartTimer) gt = savedGameStartTime;
-	if (savedRelativeTime[index])
-		return (relativeTime[index]-gt);
+int Timer::getTime(int index) {
+	DWORD r = GetTickCount();
+	if (!isTimerEnabled[index] || r<relativeTime[index])
+		return -1;
 	else
-		return (savedRelativeTime[index]-gt);
+		return (int)(r-relativeTime[index]);
+}
+
+void Timer::resetTimer(int index) {
+	isTimerEnabled[index] = TRUE;
+	relativeTime[index] = GetTickCount();
+}
+
+void Timer::stopTimer(int index) {
+	isTimerEnabled[index] = FALSE;
+	relativeTime[index] = 0;
+}
+
+BOOL Timer::isTimer(int index) {
+	return isTimerEnabled[index];
 }
