@@ -1,0 +1,153 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="헤더 파일">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="헤더 파일\BMS">
+      <UniqueIdentifier>{5715ff8c-031d-4079-af5b-b9884e963e51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\BMS">
+      <UniqueIdentifier>{f5f68254-3c0a-4ffc-be1b-71727d53352e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Draw">
+      <UniqueIdentifier>{71158231-7350-456d-a571-fda41ef49a40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Draw">
+      <UniqueIdentifier>{e9dcfca9-cb56-47c4-a9df-4336c551c28a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\GDI">
+      <UniqueIdentifier>{f410a4a0-83b6-4653-9a3f-eb26600acfd6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\GDI">
+      <UniqueIdentifier>{c354ecf1-917f-42d5-81b6-45f86395d00c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\DX">
+      <UniqueIdentifier>{37d1a46f-ccf8-4982-822a-341b7f815b04}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\DX">
+      <UniqueIdentifier>{77f1f679-d55a-4a1b-ae8b-fb30880122e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Skin">
+      <UniqueIdentifier>{69675b77-0320-4ab6-844a-2d6a557ba765}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Skin">
+      <UniqueIdentifier>{99dfa4bd-2bec-491f-b4e9-74bf3759f3d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Game">
+      <UniqueIdentifier>{893ba37a-7525-4bf8-b303-03fa00924860}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Game">
+      <UniqueIdentifier>{19c3bafc-ae37-4632-997a-d1fa3ab8b54d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="common.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="BMS\BMSParser.h">
+      <Filter>헤더 파일\BMS</Filter>
+    </ClInclude>
+    <ClInclude Include="BMS\BMSPlay.h">
+      <Filter>헤더 파일\BMS</Filter>
+    </ClInclude>
+    <ClInclude Include="BMS\BMSUtil.h">
+      <Filter>헤더 파일\BMS</Filter>
+    </ClInclude>
+    <ClInclude Include="draw\DrawManager.h">
+      <Filter>헤더 파일\Draw</Filter>
+    </ClInclude>
+    <ClInclude Include="AppWindow.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Draw\DrawImpl.h">
+      <Filter>헤더 파일\Draw</Filter>
+    </ClInclude>
+    <ClInclude Include="GDI\GDI.h">
+      <Filter>헤더 파일\GDI</Filter>
+    </ClInclude>
+    <ClInclude Include="DX\DXCore.h">
+      <Filter>헤더 파일\DX</Filter>
+    </ClInclude>
+    <ClInclude Include="Skin\SkinManager.h">
+      <Filter>헤더 파일\Skin</Filter>
+    </ClInclude>
+    <ClInclude Include="Skin\SkinElement.h">
+      <Filter>헤더 파일\Skin</Filter>
+    </ClInclude>
+    <ClInclude Include="Skin\SkinParser.h">
+      <Filter>헤더 파일\Skin</Filter>
+    </ClInclude>
+    <ClInclude Include="DX\DXTexture.h">
+      <Filter>헤더 파일\DX</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Option.h">
+      <Filter>헤더 파일\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Timer.h">
+      <Filter>헤더 파일\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Log.h">
+      <Filter>헤더 파일\Game</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="BMS\BMSParser.cpp">
+      <Filter>소스 파일\BMS</Filter>
+    </ClCompile>
+    <ClCompile Include="BMS\BMSPlay.cpp">
+      <Filter>소스 파일\BMS</Filter>
+    </ClCompile>
+    <ClCompile Include="BMS\BMSUtil.cpp">
+      <Filter>소스 파일\BMS</Filter>
+    </ClCompile>
+    <ClCompile Include="draw\DrawManager.cpp">
+      <Filter>소스 파일\Draw</Filter>
+    </ClCompile>
+    <ClCompile Include="AppWindow.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Draw\DrawImpl.cpp">
+      <Filter>소스 파일\Draw</Filter>
+    </ClCompile>
+    <ClCompile Include="GDI\GDI.cpp">
+      <Filter>소스 파일\GDI</Filter>
+    </ClCompile>
+    <ClCompile Include="DX\DXCore.cpp">
+      <Filter>소스 파일\DX</Filter>
+    </ClCompile>
+    <ClCompile Include="Skin\SkinManager.cpp">
+      <Filter>소스 파일\Skin</Filter>
+    </ClCompile>
+    <ClCompile Include="Skin\SkinElement.cpp">
+      <Filter>소스 파일\Skin</Filter>
+    </ClCompile>
+    <ClCompile Include="Skin\SkinParser.cpp">
+      <Filter>소스 파일\Skin</Filter>
+    </ClCompile>
+    <ClCompile Include="DX\DXTexture.cpp">
+      <Filter>소스 파일\DX</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Option.cpp">
+      <Filter>소스 파일\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Timer.cpp">
+      <Filter>소스 파일\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Log.cpp">
+      <Filter>소스 파일\Game</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="change.txt" />
+  </ItemGroup>
+</Project>
