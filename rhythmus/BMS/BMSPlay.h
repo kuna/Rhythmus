@@ -18,13 +18,10 @@ public:
 	
 	double GetBeatFromTime(int milisec);
 	int GetTimeFromBeat(double beat);
-	double GetValidBeat(int channel);				// find beat of Unpressed note
-	int GetValidKey(int channel);					// find key of Unpressed note
-	double GetLastBeat(double beat, int channel);	// find last note from beat (beat=0 is default)
-	int GetLastBeatIndex(double beat, int channel);
-	int GetBPMOfBeat(double beat);
+	BMSKeyData GetLastBeat(double beat, int channel);	// find last note from beat (beat=0 is default)
+	int GetBPM(double beat);
 	BMSParser* getBMSParser();
 
-	int TimeTable[MAXBEAT];
-	void initalizeTimeTable();
+	double TimeOfBMS;
+	void GetTimeOfBMS();
 };

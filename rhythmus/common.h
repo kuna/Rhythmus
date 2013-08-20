@@ -22,6 +22,7 @@
 #define BMS_MAXLINEBUF 1024
 #define BMS_MAXKEY 10240
 #define BMS_MAXCHANNEL 70
+#define BMS_MAXNOTE 65536
 #define MAXBEAT 256
 
 // encode

@@ -86,9 +86,6 @@ BOOL BMSParser::ParseBMSData() {
 	for (int i=0; i<MAXBEAT; i++) {
 		keyBeatLength[i] = 1.0f;
 	}
-	memset(keyCnt, 0, sizeof(keyCnt));
-	memset(keyBeat, 0, sizeof(keyBeat));
-	memset(keyValue, 0, sizeof(keyValue));
 
 	// line parse
 	int fPS=0, fPE=0;
@@ -114,23 +111,14 @@ BOOL BMSParser::ParseBMSData() {
 		if (fPS > fLen - 1) break;
 	}
 
-	// sort parsed data
-	// CUSTOM SORT ALGORITHM... need optimization
-	for (int n=0; n<BMS_MAXCHANNEL; n++) {
-		int m = keyCnt[n];
-		for (int i=0; i<m; i++) {
-			for (int j=i+1; j<m; j++) {
-				if (keyBeat[n][i]>keyBeat[n][j]) {
-					double t1 = keyBeat[n][i];
-					keyBeat[n][i] = keyBeat[n][j];
-					keyBeat[n][j] = t1;
-					t1 = keyValue[n][i];
-					keyValue[n][i] = keyValue[n][j];
-					keyValue[n][j] = t1;
-				}
-			}
-		}
-	}
+	// sort data
+	std::sort(bpmData, bpmData+bpmNum);
+	std::sort(BGMData, BGMData+BGMNum);
+	std::sort(BGAData, BGAData+BGANum);
+	std::sort(StopData, StopData+StopNum);
+	std::sort(OverBGAData, OverBGAData+OverBGANum);
+	std::sort(PoorBGAData, PoorBGAData+PoorBGANum);
+	std::sort(keyData, keyData+keyDatanum);
 
 	return TRUE;
 }
@@ -202,9 +190,9 @@ BOOL BMSParser::ProcessBMSLine(TCHAR *text) {
 			wcsncpy(str_channel, key+4, 2);
 			beat = _wtoi(str_beat);
 			channel = _wtoi(str_channel);
-			wcscpy(keydata[beat][channel], value);
+			//wcscpy(keydata[beat][channel], value);
 
-			// except for #02 channel
+			// #02 channel - beat length
 			if (channel == 02) {
 				keyBeatLength[beat] = (float)_wtof(value);
 			}
@@ -214,9 +202,47 @@ BOOL BMSParser::ProcessBMSLine(TCHAR *text) {
 			for (int i=0; i<ncb; i++) {
 				int nkv = BMSUtil::KeyValueToInt(value+ i*2, 2);
 				if (nkv == 0) continue;	// 00Àº ¹«½Ã
-				int nki = keyCnt[channel]++;
-				keyBeat[channel][nki] = beat + (double)i / (double)ncb;
-				keyValue[channel][nki] = nkv;
+
+				// data will separately move by channel
+				double nb = beat + (double)i / (double)ncb;
+
+				BMSKeyData *pBMSData;
+
+				switch (channel) {
+				case 8:	// extend BPM channel
+					nkv = getBPM(nkv);
+				case 3:	// BPM
+				case 9:	// STOP
+					pBMSData = &bpmData[bpmNum];
+					pBMSData->beat = nb;
+					pBMSData->key = channel;
+					pBMSData->value = nkv;
+					bpmNum++;
+					pBMSData = &keyData[keyDatanum];	// keydata also includes BPM Info
+					keyDatanum++;
+					break;
+				case 7:
+				case 6:
+				case 4:
+					pBMSData = &BGAData[BGANum];
+					BGANum++;
+					break;
+				case 11:
+				case 12:
+				case 13:
+				case 14:
+				case 15:
+				case 16:
+				case 18:
+				case 19:
+					pBMSData = &keyData[keyDatanum];
+					keyDatanum++;
+					break;
+				}
+
+				pBMSData->beat = nb;
+				pBMSData->key = channel;
+				pBMSData->value = nkv;
 			}
 
 			if (keyBeatCount < beat) keyBeatCount = beat;

@@ -4,6 +4,17 @@
 #include <hash_map>
 using namespace std;
 
+struct BMSKeyData {
+	double beat;
+	int key;
+	int value;
+	int attr;
+
+	bool operator< ( const BMSKeyData &o ) {
+		return (this->beat)<(o.beat);
+	}
+};
+
 class BMSParser {
 public:
 	BOOL ParseBMSFile(TCHAR *filename);
@@ -14,11 +25,26 @@ public:
 	double getProgress();
 
 	BOOL isBMSLoad;
-	TCHAR keydata[MAXBEAT][BMS_MAXCHANNEL][BMS_MAXKEY];	// [Beat][Channel][Keydata] // Depreciated
 
-	int keyCnt[BMS_MAXCHANNEL];					// [Channel]
-	double keyBeat[BMS_MAXCHANNEL][BMS_MAXKEY];	// [Channel][MAXKEY]
-	int keyValue[BMS_MAXCHANNEL][BMS_MAXKEY];		// [Channel][MAXKEY]
+	// BPM, Stop Data is included mixed
+	// keynote, Longnote, invisible note is included mixed
+	
+	int keyDatanum;
+	BMSKeyData keyData[BMS_MAXNOTE];	// keydata (PS: if should departed by player)
+	
+	int bpmNum;
+	BMSKeyData bpmData[BMS_MAXNOTE];	// BPM Channel: #03 and #08 + STOP Channel: #09
+	
+	int BGANum;
+	BMSKeyData BGAData[BMS_MAXNOTE];	// BGA Channel: #04, #06(Poor), #07(Overlay)
+
+	int StopNum;
+	BMSKeyData StopData[BMS_MAXNOTE];	// STOP Channel: #09
+
+	int BGMNum;
+	BMSKeyData BGMData[BMS_MAXNOTE];	// BGM Channel: #01, 
+
+
 
 	// for #02 channel (beat size)
 	// default value: 1
